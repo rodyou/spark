@@ -59,7 +59,8 @@ object NginxMonitor {
     val log = LoggerFactory.getLogger("yun")
 
     //创建spark的配置文件
-    val sparkConf = new SparkConf().setAppName(appName)
+    val sparkConf = new SparkConf().setAppName(appName).set("spark.executor.memory", "2048m")
+    sparkConf.set("spark.executor.cores","3")
     //创建上下文，并且设置每30秒对日记进行处理
     val ssc = new StreamingContext(sparkConf, Seconds(slideDuration))
     //如果此任务停止了，那么将从此处进行恢复
