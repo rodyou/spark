@@ -20,13 +20,20 @@ import org.slf4j.LoggerFactory
 object NginxMonitor {
 
   def main(args: Array[String]) {
-    //判断参数的个数是否等于4
+    //判断参数的个数是否等于1
     if (args.length != 1) {
       System.err.println( s"""
-                             | Usage: Monitor <brokers> <topics>
-                             | <brokers> is a list of one or more Kafka brokers
-                             | <topics> is a list of one or more kafka topics to consume from
-                             | <redisHost> is a redis server which result send to
+                             | Usage: Monitor conf
+                             | conf包含以下选项：
+                             | <slideDuration> is a list of one or more kafka topics to consume from
+                             | <brokers> is a redis server which result send to
+                             | <topics> is a redis server which result send to
+                             | <appName> is a redis server which result send to
+                             | <checkpoint> is a redis server which result send to
+                             | <domain> is a redis server which result send to
+                             | <ip_index> is a redis server which result send to
+                             | <code_index> is a redis server which result send to
+                             | <delay_index> is a redis server which result send to
         """.stripMargin)
       System.exit(1)
     }
