@@ -108,10 +108,10 @@ object NginxMonitor {
 
         val arr = line.trim.split("""\]\s*?\[""")
 
-        val ip=arr(ip_index)
-        val url=arr(url_index)
-        val code=arr(code_index)
-        val delay=arr(delay_index)
+        val ip=arr(ip_index-1)
+        val url=arr(url_index-1)
+        val code=arr(code_index-1)
+        val delay=arr(delay_index-1)
 
 
         val wrapperLine = LineParser.wrapper(url, ip, code, delay, domain)
