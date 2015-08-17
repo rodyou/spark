@@ -49,11 +49,12 @@ object NginxMonitor {
     val appName= conf.getString("appName")
     val checkpoint= conf.getString("checkpoint")
 
+
     //域名
     val domain= conf.getString("domain")
 
     //正则表达式
-    val regex= conf.getString("regex").r
+    //val regex= conf.getString("regex").r
 
 
 
@@ -93,14 +94,25 @@ object NginxMonitor {
         //对日志进行匹配,此处没有做错误处理
         //正则表达式
         //val regex(ip, _, _, url, code, _, _, _, _, _, _, delay, _, _) = line.trim
-        val m = regex.findAllIn(line.trim)
+        //val m = regex.findAllIn(line.trim)
 
+        /**
         println(m)
-
         val ip = m.group(ip_index)
         val url = m.group(url_index)
         val code = m.group(code_index)
         val delay = m.group(delay_index)
+
+        **/
+
+
+        val arr = line.trim.split("""\]\s*?\[""")
+
+        val ip=arr(ip_index)
+        val url=arr(url_index)
+        val code=arr(code_index)
+        val delay=arr(delay_index)
+
 
         val wrapperLine = LineParser.wrapper(url, ip, code, delay, domain)
 
