@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: com.mls.monitor.NginxMonitor
+Main-Class: com.mls.monitor.MpayMonitor
 

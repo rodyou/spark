@@ -12,6 +12,9 @@ object LineParser {
     if (array.length >= 2) {
       //抛去？后的参数
       simpleUrl = array(1).split("\\?")(0).replaceAll("[0-9]", "")
+    }else{
+      //专门为支付做的兼容，nginx格式不一致，好多的坑
+      simpleUrl = array(0).split("\\?")(0).replaceAll("[0-9]", "")
     }
 
 
