@@ -43,7 +43,15 @@ object LineParser {
 
       //将所有得延时时间相加
       for (arg <- arr) {
+        try {
         _delay = _delay + arg.toFloat
+        }catch {
+          case ex: Exception => {
+            println(ex)
+            _delay = _delay + 0f
+          }
+
+        }
       }
 
       //将单位换算成毫秒

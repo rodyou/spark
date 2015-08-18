@@ -90,42 +90,26 @@ object NginxMonitor {
     val lines = messages.map(_._2).filter(line=>line.trim.size >0).map(mapFunc = line => {
 
 
-      //try {
-        //对日志进行匹配,此处没有做错误处理
-        //正则表达式
-        //val regex(ip, _, _, url, code, _, _, _, _, _, _, delay, _, _) = line.trim
-        //val m = regex.findAllIn(line.trim)
 
-        /**
-        println(m)
-        val ip = m.group(ip_index)
-        val url = m.group(url_index)
-        val code = m.group(code_index)
-        val delay = m.group(delay_index)
+        try {
 
-        **/
+          val arr = line.trim.split( """\]\s*?\[""")
 
+          val ip = arr(ip_index - 1)
+          val url = arr(url_index - 1)
+          val code = arr(code_index - 1)
+          val delay = arr(delay_index - 1)
 
-        val arr = line.trim.split("""\]\s*?\[""")
-
-        val ip=arr(ip_index-1)
-        val url=arr(url_index-1)
-        val code=arr(code_index-1)
-        val delay=arr(delay_index-1)
-
-
-        val wrapperLine = LineParser.wrapper(url, ip, code, delay, domain)
-
-        wrapperLine
-        /**
-      }catch {
-        case ex: Exception => {
-          log.error("excpetion",ex)
-          return
+          val wrapperLine = LineParser.wrapper(url, ip, code, delay, domain)
+          wrapperLine
+        }catch {
+          case ex: Exception => {
+            println(ex)
+            val line= (domain+ "/exception" + ":" + 9999 , (1L, -1f))
+            line
+          }
         }
 
-      }
-          **/
     })
 
     val add=(x:(Long,Float),y:(Long,Float)) =>{
