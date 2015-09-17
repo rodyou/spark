@@ -119,7 +119,7 @@ object MpayMonitor {
       (x._1-y._1,x._2-y._2)
     }
     //计算
-    val rs=lines.reduceByKeyAndWindow(add,subtraction,Seconds(slideDuration),Seconds(slideDuration))
+    val rs=lines.reduceByKeyAndWindow(add,Seconds(slideDuration),Seconds(slideDuration))
 
     rs.print(1000)
     RedisDist.dist(rs)
