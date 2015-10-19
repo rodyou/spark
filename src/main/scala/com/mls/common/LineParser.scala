@@ -24,7 +24,13 @@ object LineParser {
       simpleCode = "3xx"
     }
     else if (code.startsWith("4")) {
-      simpleCode = "4xx"
+
+      if (code.equals("400")){
+        simpleCode="400"
+      }else{
+        simpleCode = "4xx"
+      }
+
     }
     else if (code.startsWith("5")) {
       simpleCode = "5xx"
