@@ -71,6 +71,7 @@ object NginxMonitor {
     sparkConf.set("spark.executor.cores","3")
     //创建上下文，并且设置每30秒对日记进行处理
     val ssc = new StreamingContext(sparkConf, Seconds(slideDuration))
+    
     //如果此任务停止了，那么将从此处进行恢复
     ssc.checkpoint(checkpoint)
 
