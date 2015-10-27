@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory
  *
  * Created by zhangzhikuan on 15/8/10.
  */
-object NginxMonitor {
+object MpayMonitor {
 
   def main(args: Array[String]) {
     //判断参数的个数是否等于1
@@ -49,19 +49,10 @@ object NginxMonitor {
     val appName= conf.getString("appName")
     val checkpoint= conf.getString("checkpoint")
 
-
     //域名
-    val domain= conf.getString("domain")
-
-    //正则表达式
-    //val regex= conf.getString("regex").r
+    val domain= "mpay.meilishuo.com"
 
 
-
-    val ip_index= conf.getInt("ip_index")
-    val url_index= conf.getInt("url_index")
-    val code_index= conf.getInt("code_index")
-    val delay_index= conf.getInt("delay_index")
 
 
     val log = LoggerFactory.getLogger("yun")
@@ -71,7 +62,6 @@ object NginxMonitor {
     sparkConf.set("spark.executor.cores","3")
     //创建上下文，并且设置每30秒对日记进行处理
     val ssc = new StreamingContext(sparkConf, Seconds(slideDuration))
-    
     //如果此任务停止了，那么将从此处进行恢复
     ssc.checkpoint(checkpoint)
 
@@ -91,26 +81,35 @@ object NginxMonitor {
     val lines = messages.map(_._2).filter(line=>line.trim.size >0).map(mapFunc = line => {
 
 
+      //try {
 
-        try {
 
-          val arr = line.trim.split( """\]\s*?\[""")
 
-          val ip = arr(ip_index - 1)
-          val url = arr(url_index - 1)
-          val code = arr(code_index - 1)
-          val delay = arr(delay_index - 1)
+        val arr = line.trim.split("""\s+?""")
 
-          val wrapperLine = LineParser.wrapper(url, ip, code, delay, domain)
-          wrapperLine
-        }catch {
-          case ex: Exception => {
-            println(ex)
-            val line= (domain+ "/exception" + ":" + 9999 , (1L, -1f))
-            line
-          }
+        val ip=arr(0)
+        val url=arr(6)
+        val code=arr(8)
+        val delay_tmp=arr(arr.length-1)
+
+
+        var delay = "0"
+        if(delay_tmp.size!=0){
+          delay =delay_tmp.substring(1,delay_tmp.size-1)
         }
 
+        val wrapperLine = LineParser.wrapper(url, ip, code, delay, domain)
+
+        wrapperLine
+        /**
+      }catch {
+        case ex: Exception => {
+          log.error("excpetion",ex)
+          return
+        }
+
+      }
+          **/
     })
 
     val add=(x:(Long,Float),y:(Long,Float)) =>{

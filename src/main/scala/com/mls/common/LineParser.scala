@@ -12,6 +12,9 @@ object LineParser {
     if (array.length >= 2) {
       //抛去？后的参数
       simpleUrl = array(1).split("\\?")(0).replaceAll("[0-9]", "")
+    }else{
+      //专门为支付做的兼容，nginx格式不一致，好多的坑
+      simpleUrl = array(0).split("\\?")(0).replaceAll("[0-9]", "")
     }
 
 
@@ -21,7 +24,13 @@ object LineParser {
       simpleCode = "3xx"
     }
     else if (code.startsWith("4")) {
-      simpleCode = "4xx"
+
+      if (code.equals("400")){
+        simpleCode="400"
+      }else{
+        simpleCode = "4xx"
+      }
+
     }
     else if (code.startsWith("5")) {
       simpleCode = "5xx"
@@ -40,7 +49,15 @@ object LineParser {
 
       //将所有得延时时间相加
       for (arg <- arr) {
+        try {
         _delay = _delay + arg.toFloat
+        }catch {
+          case ex: Exception => {
+            println(ex)
+            _delay = _delay + 0f
+          }
+
+        }
       }
 
       //将单位换算成毫秒
