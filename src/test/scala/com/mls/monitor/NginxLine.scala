@@ -5,7 +5,7 @@ import scala.util.matching.Regex
 /**
  * Created by Kuan on 15/10/27.
  */
-class NginxLine(line: String) {
+class NginxLine(line: String) extends Serializable{
 
   /*
   * 返回格式为(key,(count,value))
