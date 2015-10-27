@@ -5,26 +5,41 @@ import scala.util.matching.Regex
 /**
  * Created by Kuan on 15/10/27.
  */
-class NginxLine(line:String) {
+class NginxLine(line: String) {
 
-  val regex = """\[(.*?)\]\s*\[(.*?)\]\s*\[.*?\s+(.*?)\s+.*?\]\s*\[(.*?)\]\s*\[(.*?)\]""".r
+  private val regex = """\[(.*?)\s+.*?\]\s*\[(.*?)\]\s*\[.*?\s+(.*?)\s+.*?\]\s*\[(.*?)\]\s*\[(.*?)\]""".r
 
-  def parse(): (String,String,String,Int,Float) ={
-    val regex(time,domain,url,respCode,reqTime) = line
-    (time,domain,url,respCode.toInt,reqTime.toFloat)
+  def regexParse(): (String, String, String, Int, Float) = {
+    val regex(time, domain, url, respCode, reqTime) = line
+    (time, domain, url, respCode.toInt, reqTime.toFloat)
   }
 
+  def parse(): (String, String, String, Int, Float) = {
+    //val regex(time, domain, url, respCode, reqTime) = line
+
+
+    val arr = line.split( """\]\s*\[""")
+    /*
+      "[16/Aug/2015:23:31:58 +0800] [www.meilishuo.com] [POST /aj/wallet/getpayamount HTTP/1.1] [400] [195]"
+    */
+    val time = arr(0).stripPrefix("[").split( """\s+""")(0)
+    val domain = arr(1)
+    val url = arr(2).split( """\s+""")(1)
+    val respCode = arr(3)
+    val reqTime = arr(4).stripSuffix("]")
+    (time, domain, url, respCode.toInt, reqTime.toFloat)
+  }
 }
 
-object NginxLine{
+object NginxLine {
   def main(args: Array[String]) {
-    val o = new NginxLine("[2015] [www.meilishuo.com] [GET mls Tail]    [200] [0.1]")
-    val ret  = o.parse()
-    println(ret._3)
-    println(ret._5)
-    println(ret._4)
+    val o = new NginxLine("[16/Aug/2015:23:31:58 +0800] [www.meilishuo.com] [POST /aj/wallet/getpayamount HTTP/1.1] [400] [195]")
+    val ret = o.parse()
+    println(ret._1)
     println(ret._2)
-    print(ret._1)
+    println(ret._3)
+    println(ret._4)
+    print(ret._5)
 
   }
 }
